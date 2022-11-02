@@ -4,6 +4,7 @@
   box-sizing: border-box;
 }
 
+/* Navbar */
 #navbar {
   background-color: gray;
   color: white;
@@ -30,6 +31,7 @@
   cursor: pointer;
 }
 
+/* Signup & Login */
 .accounts {
   width: 50%;
   margin: auto;
@@ -58,4 +60,18 @@
 .accounts input {
   width: 100%;
   padding: 5px;
+}
+
+/* Home */
+#home {
+  padding: 50px 5%;
+  text-align: center;
+}
+
+#home>h1 {
+  margin-bottom: 30px;
+}
+
+#home>ul {
+  list-style-type: none;
 }

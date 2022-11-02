@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
         useState(() => localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null);
     const [user, setUser] =
         useState(() => localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')) : null);
+    const [loading, setLoading] = useState(true);
 
     // Sign Up
     const signUp = (e, setFormData, formData) => {
@@ -79,7 +80,7 @@ export const AuthProvider = ({ children }) => {
         setAuthTokens(null);
         setUser(null);
         localStorage.removeItem('authTokens');
-        navigate('/');
+        navigate('/login');
     }
 
     const updateToken = () => {
@@ -106,19 +107,11 @@ export const AuthProvider = ({ children }) => {
                 console.log(error);
                 logout();
             })
+
+        if (loading) {
+            setLoading(false);
+        }
     }
-
-
-    useEffect(() => {
-        const fourMinutes = 1000 * 60 * 4;
-        const interval = setInterval(() => {
-            if (authTokens) {
-                updateToken();
-            }
-        }, fourMinutes)
-
-        return () => clearInterval(interval)
-    }, [authTokens])
 
     const contextData = {
         signUp: signUp,
@@ -128,9 +121,24 @@ export const AuthProvider = ({ children }) => {
         user: user
     }
 
+    useEffect(() => {
+        if (loading) {
+            updateToken();
+        }
+
+        const fourMinutes = 1000 * 60 * 4;
+        const interval = setInterval(() => {
+            if (authTokens) {
+                updateToken();
+            }
+        }, fourMinutes)
+
+        return () => clearInterval(interval)
+    }, [authTokens, loading])
+
     return (
         <AuthContext.Provider value={contextData}>
-            {children}
+            {loading ? null : children}
         </AuthContext.Provider>
     )
 }
